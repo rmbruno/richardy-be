@@ -37,12 +37,21 @@ app.get('/usuario-secao/:id', async (req, res) => {
 app.get('/vendas/:data/:secoes', async (req, res) => {
     let sec = JSON.parse(req.params.secoes)
     let oii = sec.map( function(el) { return el.id; })
+    let arr = []
+    for (let index = 0; index < sec.length; index++) {
+        const results = await client.query(`SELECT * FROM rel_parcial where data='${req.params.data}' AND secao='${sec[index].id}';`)
+        arr = arr.concat(results[0])
+    }
 
-    //console.log(`SELECT * FROM rel_parcial where secao IN ${client.escape(oii)}, function(err_res, results){};`)
-    const results = await client.query(`SELECT * FROM rel_parcial where secao IN ('${client.escape(oii)}') and data='${req.params.data}';`)
-    //query( "select * from `contents` where `user_is` IN ("+ connection.escape(arr)+")", function( err_user, result_user ) { });
-    res.json(results[0])
+
+    res.json(arr)
+    //console.log(arr)
     //return results[0]
+})
+
+app.get('/vendas', async (req, res) => {
+    const results = await client.query(`SELECT * FROM rel_parcial;`)
+    res.json(results[0])
 })
 
 app.listen(process.env.PORT, () => {
