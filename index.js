@@ -35,16 +35,9 @@ app.get('/usuario-secao/:id', async (req, res) => {
 })
 
 app.get('/vendas/:data/:secoes', async (req, res) => {
-    let sec = JSON.parse(req.params.secoes)
-    let oii = sec.map( function(el) { return el.id; })
-    let arr = []
-    for (let index = 0; index < sec.length; index++) {
-        const results = await client.query(`SELECT * FROM rel_parcial where data='${req.params.data}' AND secao='${sec[index].id}';`)
-        arr = arr.concat(results[0])
-    }
-
-
-    res.json(arr)
+    
+    const results = await client.query(`SELECT * FROM rel_parcial where data='${req.params.data}' AND secao='${req.params.secoes}';`)
+    res.json(results[0])
     //console.log(arr)
     //return results[0]
 })
