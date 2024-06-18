@@ -36,7 +36,7 @@ app.get('/usuario-secao/:id', async (req, res) => {
 
 app.get('/vendas/:data/:secoes', async (req, res) => {
     
-    const results = await client.query(`SELECT * FROM rel_parcial where data='${req.params.data}' AND secao='${req.params.secoes}';`)
+    const results = await (await client.query(`SELECT * FROM rel_parcial where data='${req.params.data}' AND secao='${req.params.secoes}' ORDER BY total_venda DESC;`))
     res.json(results[0])
     //console.log(arr)
     //return results[0]
