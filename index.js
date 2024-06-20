@@ -11,6 +11,7 @@ async function getUser(){
 }
 
 const app = express()
+app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 app.use((req,res,next) => {
@@ -19,6 +20,20 @@ app.use((req,res,next) => {
     res.header("Acces-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header('Access-Control-Allow-Credentials', true);
     next();
+})
+
+app.get('/usuario', async (req, res) => {
+    const results = await client.query(`SELECT * FROM usuario;`)
+    //console.log(results[0][0].id)
+    res.json(results[0])
+    //return results[0]
+})
+
+
+app.put('/usuarioSenha/:id/:pass', async (req, res) => {
+    const {senha} = req.body
+    const results = await client.query(`UPDATE usuario SET senha='${req.params.pass}' WHERE id='${req.params.id}';`)
+    res.json(results[0])
 })
 
 app.get('/usuario/:email/:senha', async (req, res) => {
